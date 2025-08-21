@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 type InventoryItem = {
   name: string;
   quantity: number;
+  lastUpdated: string;
 };
 
 let inventoryData: InventoryItem[] = [];
