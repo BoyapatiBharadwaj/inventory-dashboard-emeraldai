@@ -22,62 +22,63 @@ export default function InventoryDashboard() {
 
   useEffect(() => {
     fetchInventory();
-    const interval = setInterval(fetchInventory, 5000); // auto-refresh
+    const interval = setInterval(fetchInventory, 5000);
     return () => clearInterval(interval);
   }, []);
 
-  // Function to get row color based on quantity
-  const getQuantityColor = (qty: number) => {
-    if (qty === 0) return 'text-red-600 font-bold';
-    if (qty <= 5) return 'text-yellow-600 font-semibold';
-    return 'text-green-600 font-semibold';
+  // Stock color styles
+  const getStockStyles = (qty: number) => {
+    if (qty === 0) return "bg-gradient-to-br from-red-100 via-red-50 to-white text-red-700 border-red-300";
+    if (qty <= 5) return "bg-gradient-to-br from-yellow-100 via-yellow-50 to-white text-yellow-700 border-yellow-300";
+    return "bg-gradient-to-br from-green-100 via-green-50 to-white text-green-700 border-green-300";
   };
 
   return (
-    <div className="overflow-x-auto">
-      <div className="flex justify-between items-center mb-4">
-        <span className="text-gray-700 font-medium">
-          Last Refresh: {lastRefresh || 'Never'}
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 flex flex-col items-center py-12 px-6">
+      {/* Title */}
+      <h1 className="text-6xl font-extrabold text-indigo-800 drop-shadow-md mb-10 text-center tracking-tight">
+        📦 Inventory Dashboard
+      </h1>
+
+      {/* Refresh Section */}
+      <div className="flex flex-col sm:flex-row justify-between items-center w-full max-w-6xl mb-10 gap-4">
+        <span className="text-gray-600 font-medium text-lg">
+          ⏳ Last Refresh: <span className="font-semibold text-indigo-700">{lastRefresh || 'Never'}</span>
         </span>
         <button
           onClick={fetchInventory}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-indigo-600 text-white px-6 py-2.5 rounded-xl shadow-lg hover:bg-indigo-700 hover:shadow-xl transition"
         >
-          Refresh
+          🔄 Refresh
         </button>
       </div>
 
-      <table className="min-w-full bg-white rounded-lg shadow-md overflow-hidden">
-        <thead className="bg-blue-600 text-white">
-          <tr>
-            <th className="py-3 px-6 text-left">Item</th>
-            <th className="py-3 px-6 text-left">Quantity</th>
-            <th className="py-3 px-6 text-left">Last Updated</th>
-          </tr>
-        </thead>
-        <tbody>
-          {inventory.length === 0 ? (
-            <tr>
-              <td colSpan={3} className="text-center py-4 text-gray-500">
-                No inventory data available.
-              </td>
-            </tr>
-          ) : (
-            inventory.map((item, index) => (
-              <tr
-                key={index}
-                className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}
-              >
-                <td className="py-3 px-6">{item.name}</td>
-                <td className={`py-3 px-6 ${getQuantityColor(item.quantity)}`}>
-                  {item.quantity}
-                </td>
-                <td className="py-3 px-6">{item.lastUpdated}</td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+      {/* Cards Grid */}
+      {inventory.length === 0 ? (
+        <div className="mt-24 text-gray-500 italic text-2xl font-light">
+          🚫 No inventory data available.
+        </div>
+      ) : (
+        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full max-w-6xl">
+          {inventory.map((item, index) => (
+            <div
+              key={index}
+              className={`p-8 border rounded-3xl shadow-xl ${getStockStyles(
+                item.quantity
+              )} hover:scale-105 hover:shadow-2xl transform transition duration-300`}
+            >
+              <h2 className="text-2xl font-bold mb-3 text-gray-900">{item.name}</h2>
+              <p className="text-lg mb-2">
+                <span className="font-semibold">Quantity:</span>{" "}
+                <span className="text-xl font-bold">{item.quantity}</span>
+              </p>
+              <p className="text-sm text-gray-600 mt-2 italic">
+                Last Updated: {item.lastUpdated}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
