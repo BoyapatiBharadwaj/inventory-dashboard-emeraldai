@@ -1,13 +1,18 @@
 'use client';
 import { useEffect, useState } from 'react';
 
+type InventoryItem = {
+  name: string;
+  quantity: number;
+};
+
 export default function InventoryDashboard() {
-  const [inventory, setInventory] = useState([]);
+  const [inventory, setInventory] = useState<InventoryItem[]>([]);
 
   useEffect(() => {
     async function fetchInventory() {
       const res = await fetch('/api/inventory');
-      const data = await res.json();
+      const data: InventoryItem[] = await res.json();
       setInventory(data);
     }
     fetchInventory();

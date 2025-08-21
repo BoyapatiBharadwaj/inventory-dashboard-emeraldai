@@ -5,14 +5,14 @@ type InventoryItem = {
   quantity: number;
 };
 
-let inventoryData: InventoryItem[] = []; // We'll store data here temporarily
+let inventoryData: InventoryItem[] = [];
 
 export async function POST(req: NextRequest) {
-  const data = await req.json();
-  inventoryData = data; // Update inventory with n8n payload
+  const data: InventoryItem[] = await req.json();
+  inventoryData = data; // update inventory
   return NextResponse.json({ success: true });
 }
 
 export async function GET() {
-  return NextResponse.json(inventoryData); // Return current inventory
+  return NextResponse.json(inventoryData);
 }
